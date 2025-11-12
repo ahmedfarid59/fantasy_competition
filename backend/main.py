@@ -56,7 +56,11 @@ app.add_middleware(
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     """Handle request validation errors"""
     errors = exc.errors()
-    logger.error(f"❌ [VALIDATION] Request validation failed: {errors}")
+    
+    # Log detailed validation error information
+    logger.error(f"❌ [VALIDATION ERROR] Request: {request.method} {request.url.path}")
+    logger.error(f"❌ [VALIDATION ERROR] Client: {request.client.host if request.client else 'Unknown'}")
+    logger.error(f"❌ [VALIDATION ERROR] Errors: {errors}")
     
     # Format error messages for frontend
     error_messages = []
@@ -64,6 +68,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         field = " -> ".join(str(x) for x in error["loc"])
         message = error["msg"]
         error_messages.append(f"{field}: {message}")
+        logger.error(f"   ↳ Field: {field}, Message: {message}")
     
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -77,7 +82,11 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     """Handle HTTP exceptions with consistent format"""
-    logger.error(f"❌ [HTTP] {exc.status_code}: {exc.detail}")
+    # Log HTTP exception with context
+    logger.error(f"❌ [HTTP ERROR] Status: {exc.status_code}")
+    logger.error(f"❌ [HTTP ERROR] Request: {request.method} {request.url.path}")
+    logger.error(f"❌ [HTTP ERROR] Client: {request.client.host if request.client else 'Unknown'}")
+    logger.error(f"❌ [HTTP ERROR] Detail: {exc.detail}")
     
     return JSONResponse(
         status_code=exc.status_code,
@@ -90,8 +99,15 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 @app.exception_handler(SQLAlchemyError)
 async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError):
     """Handle database errors"""
-    logger.error(f"❌ [DATABASE] SQLAlchemy error: {str(exc)}")
-    logger.error(f"❌ [DATABASE] Traceback: {traceback.format_exc()}")
+    # Log detailed database error information
+    logger.error(f"❌ [DATABASE ERROR] Request: {request.method} {request.url.path}")
+    logger.error(f"❌ [DATABASE ERROR] Client: {request.client.host if request.client else 'Unknown'}")
+    logger.error(f"❌ [DATABASE ERROR] Error Type: {type(exc).__name__}")
+    logger.error(f"❌ [DATABASE ERROR] Error Message: {str(exc)}")
+    logger.error(f"❌ [DATABASE ERROR] Full Traceback:")
+    for line in traceback.format_exc().split('\n'):
+        if line.strip():
+            logger.error(f"   {line}")
     
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -104,9 +120,17 @@ async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError):
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Handle all other uncaught exceptions"""
-    logger.error(f"❌ [ERROR] Unhandled exception: {str(exc)}")
-    logger.error(f"❌ [ERROR] Type: {type(exc).__name__}")
-    logger.error(f"❌ [ERROR] Traceback: {traceback.format_exc()}")
+    # Log comprehensive error information
+    logger.error(f"❌ [UNHANDLED ERROR] ==========================================")
+    logger.error(f"❌ [UNHANDLED ERROR] Request: {request.method} {request.url.path}")
+    logger.error(f"❌ [UNHANDLED ERROR] Client: {request.client.host if request.client else 'Unknown'}")
+    logger.error(f"❌ [UNHANDLED ERROR] Error Type: {type(exc).__name__}")
+    logger.error(f"❌ [UNHANDLED ERROR] Error Message: {str(exc)}")
+    logger.error(f"❌ [UNHANDLED ERROR] Full Traceback:")
+    for line in traceback.format_exc().split('\n'):
+        if line.strip():
+            logger.error(f"   {line}")
+    logger.error(f"❌ [UNHANDLED ERROR] ==========================================")
     
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -121,14 +145,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 async def startup_event():
     logger.info("🚀 [SERVER] Starting Fantasy Competition API...")
     
-    # Run database migrations automatically
-    try:
-        from migrate_database import migrate_database
-        migrate_database()
-    except Exception as e:
-        logger.error(f"❌ [SERVER] Migration error: {e}")
-        # Continue anyway - init_db will handle basic setup
-    
+    # Initialize database
     init_db()
     logger.info("✅ [SERVER] Database initialized")
     logger.info("📊 [SERVER] Server ready at http://localhost:5000")
@@ -210,13 +227,15 @@ async def register(user_data: RegisterRequest, db: Session = Depends(get_db)):
             }
         )
     except ValueError as e:
-        logger.error(f"❌ [API] Registration failed: {str(e)}")
+        logger.error(f"❌ [API] Registration failed - ValueError: {str(e)}")
+        logger.error(f"❌ [API] Registration traceback: {traceback.format_exc()}")
         return AuthResponse(
             success=False,
             message=str(e)
         )
     except Exception as e:
-        logger.error(f"❌ [API] Registration error: {str(e)}")
+        logger.error(f"❌ [API] Registration error - {type(e).__name__}: {str(e)}")
+        logger.error(f"❌ [API] Registration traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -312,10 +331,12 @@ async def delete_account(x_user_id: str = Header(...), db: Session = Depends(get
     except HTTPException:
         raise
     except ValueError as e:
-        logger.error(f"❌ [API] Validation error: {e}")
+        logger.error(f"❌ [API] Account deletion validation error: {e}")
+        logger.error(f"❌ [API] Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        logger.error(f"❌ [API] Unexpected error deleting account: {e}")
+        logger.error(f"❌ [API] Unexpected error deleting account - {type(e).__name__}: {e}")
+        logger.error(f"❌ [API] Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail="Failed to delete account. Please try again.")
 
 
@@ -593,10 +614,14 @@ async def submit_team(team_data: TeamCreate, x_user_id: str = Header(...), db: S
         logger.info(f"✅ [API] Team saved successfully for user {team_data.userId}")
         return result
     except ValueError as e:
-        logger.error(f"❌ [API] Validation error saving team: {str(e)}")
+        logger.error(f"❌ [API] Team save validation error - User: {team_data.userId}, Round: {team_data.round}")
+        logger.error(f"❌ [API] Error: {str(e)}")
+        logger.error(f"❌ [API] Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        logger.error(f"❌ [API] Error saving team: {str(e)}")
+        logger.error(f"❌ [API] Unexpected error saving team - User: {team_data.userId}, Round: {team_data.round}")
+        logger.error(f"❌ [API] Error Type: {type(e).__name__}, Message: {str(e)}")
+        logger.error(f"❌ [API] Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail="Failed to save team. Please try again.")
 
 @app.get("/api/team/{user_id}/{round_number}", response_model=dict)
@@ -685,10 +710,14 @@ async def create_player_endpoint(player_data: PlayerCreate, db: Session = Depend
         logger.info(f"✅ [API] Player created successfully")
         return result
     except ValueError as e:
-        logger.error(f"❌ [API] Error creating player: {str(e)}")
+        logger.error(f"❌ [API] Player creation validation error - Name: {player_data.name}")
+        logger.error(f"❌ [API] Error: {str(e)}")
+        logger.error(f"❌ [API] Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        logger.error(f"❌ [API] Error creating player: {str(e)}")
+        logger.error(f"❌ [API] Unexpected error creating player - Name: {player_data.name}")
+        logger.error(f"❌ [API] Error Type: {type(e).__name__}, Message: {str(e)}")
+        logger.error(f"❌ [API] Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -703,7 +732,9 @@ async def update_player_endpoint(player_id: int, player_data: PlayerUpdate, db: 
         logger.info(f"✅ [API] Player updated successfully")
         return result
     except ValueError as e:
-        logger.error(f"❌ [API] Error updating player: {str(e)}")
+        logger.error(f"❌ [API] Player update validation error - ID: {player_id}")
+        logger.error(f"❌ [API] Error: {str(e)}")
+        logger.error(f"❌ [API] Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         logger.error(f"❌ [API] Error updating player: {str(e)}")

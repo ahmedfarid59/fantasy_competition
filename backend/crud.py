@@ -4,6 +4,7 @@ from typing import List, Optional
 import json
 import logging
 import re
+import traceback
 
 from database import User, Player, Round, Team, Transfer, PlayerScore, Config
 from models import TeamCreate, TransferCreate, ScoreUpdate, PlayerCreate, PlayerUpdate
@@ -839,10 +840,13 @@ def create_or_update_team(db: Session, team_data: TeamCreate) -> dict:
     except ValueError as e:
         db.rollback()
         logger.error(f"❌ [CRUD] Validation error saving team: {e}")
+        logger.error(f"❌ [CRUD] Traceback: {traceback.format_exc()}")
         raise
     except Exception as e:
         db.rollback()
-        logger.error(f"❌ [CRUD] Unexpected error saving team: {e}")
+        logger.error(f"❌ [CRUD] Unexpected error saving team - Type: {type(e).__name__}")
+        logger.error(f"❌ [CRUD] Error: {e}")
+        logger.error(f"❌ [CRUD] Traceback: {traceback.format_exc()}")
         raise ValueError(f"Failed to save team. Please try again.")
 
 

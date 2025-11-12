@@ -3,17 +3,18 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import React, { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import apiService from '../services/api';
+import haptic from '../utils/haptics';
 import { ServerConfig } from '../utils/serverConfig';
 import { enableSounds, getSoundVolume, isSoundEnabled, playSound, setSoundVolume, SoundEffect } from '../utils/sounds';
 import ProfileEditScreen from './ProfileEditScreen';
@@ -47,6 +48,7 @@ export default function SettingsScreen({ onNavigateToHelp }: SettingsScreenProps
 
   const handleSaveServer = async () => {
     if (!serverUrl.trim()) {
+      haptic.error();
       playSound(SoundEffect.ERROR);
       Alert.alert('Error', 'Server URL cannot be empty');
       return;
@@ -54,6 +56,7 @@ export default function SettingsScreen({ onNavigateToHelp }: SettingsScreenProps
 
     // Basic URL validation
     if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+      haptic.error();
       playSound(SoundEffect.ERROR);
       Alert.alert('Error', 'Server URL must start with http:// or https://');
       return;
@@ -62,9 +65,11 @@ export default function SettingsScreen({ onNavigateToHelp }: SettingsScreenProps
     setLoading(true);
     try {
       await ServerConfig.saveServerUrl(serverUrl.trim());
+      haptic.success();
       playSound(SoundEffect.SAVE);
       Alert.alert('Success', 'Server URL updated successfully!\n\nRestart the app for changes to take effect.');
     } catch (error) {
+      haptic.error();
       playSound(SoundEffect.ERROR);
       Alert.alert('Error', 'Failed to save server URL');
     } finally {
@@ -353,6 +358,7 @@ export default function SettingsScreen({ onNavigateToHelp }: SettingsScreenProps
     <TouchableOpacity
       style={[styles.tabButton, activeTab === tab && styles.tabButtonActive]}
       onPress={() => {
+        haptic.selection();
         setActiveTab(tab);
         playSound(SoundEffect.CLICK);
       }}

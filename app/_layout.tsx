@@ -5,14 +5,14 @@ import { useEffect } from 'react';
 import { ActivityIndicator, Alert, BackHandler, StyleSheet, View } from 'react-native';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { AuthProvider, useAuth } from '../src/context/AuthContext';
-import { GameProvider } from '../src/context/GameContext';
-import LoginScreen from '../src/screens/LoginScreen';
-import apiService from '../src/services/api';
-import { initializeFileLogging } from '../src/utils/fileLogger';
-import { ServerConfig } from '../src/utils/serverConfig';
-import { preloadSounds } from '../src/utils/sounds';
+import { useColorScheme } from '@/src/hooks/use-color-scheme';
+import { AuthProvider, useAuth } from '@/src/context/AuthContext';
+import { GameProvider } from '@/src/context/GameContext';
+import LoginScreen from '@/src/screens/LoginScreen';
+import apiService from '@/src/services/api';
+import { initializeFileLogging } from '@/src/utils/fileLogger';
+import { ServerConfig } from '@/src/utils/serverConfig';
+import { preloadSounds } from '@/src/utils/sounds';
 
 export const unstable_settings = {
   anchor: '(tabs)',

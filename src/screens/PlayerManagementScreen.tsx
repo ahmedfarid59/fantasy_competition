@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import apiService from '../services/api';
+import haptic from '../utils/haptics';
 
 interface Player {
   id: number;
@@ -95,39 +96,46 @@ export default function PlayerManagementScreen() {
   const handleSave = async () => {
     // Validate name
     if (!name || !name.trim()) {
+      haptic.error();
       Alert.alert('Validation Error', 'Player name is required');
       return;
     }
 
     const trimmedName = name.trim();
     if (trimmedName.length < 2) {
+      haptic.error();
       Alert.alert('Validation Error', 'Player name must be at least 2 characters long');
       return;
     }
 
     if (trimmedName.length > 100) {
+      haptic.error();
       Alert.alert('Validation Error', 'Player name cannot exceed 100 characters');
       return;
     }
 
     // Validate price
     if (!price || !price.trim()) {
+      haptic.error();
       Alert.alert('Validation Error', 'Player price is required');
       return;
     }
 
     const priceNum = parseInt(price);
     if (isNaN(priceNum)) {
+      haptic.error();
       Alert.alert('Validation Error', 'Price must be a valid number');
       return;
     }
 
     if (priceNum < 1000000) {
+      haptic.error();
       Alert.alert('Validation Error', 'Price must be at least 1,000,000');
       return;
     }
 
     if (priceNum > 10000000) {
+      haptic.error();
       Alert.alert('Validation Error', 'Price cannot exceed 10,000,000');
       return;
     }
@@ -135,23 +143,27 @@ export default function PlayerManagementScreen() {
     // Validate points
     const pointsNum = points ? parseInt(points) : 0;
     if (isNaN(pointsNum)) {
+      haptic.error();
       Alert.alert('Validation Error', 'Points must be a valid number');
       return;
     }
 
     if (pointsNum < 0) {
+      haptic.error();
       Alert.alert('Validation Error', 'Points cannot be negative');
       return;
     }
 
     // Validate qualified field
     if (typeof qualified !== 'boolean') {
+      haptic.error();
       Alert.alert('Validation Error', 'Invalid qualified status');
       return;
     }
 
     // Validate editing player if in edit mode
     if (editingPlayer && (!editingPlayer.id || editingPlayer.id <= 0)) {
+      haptic.error();
       Alert.alert('Error', 'Invalid player ID. Please refresh and try again.');
       return;
     }
@@ -171,6 +183,7 @@ export default function PlayerManagementScreen() {
         : await apiService.createPlayer(playerData);
 
       if (result.success) {
+        haptic.success();
         Alert.alert(
           'Success',
           editingPlayer ? 'Player updated successfully' : 'Player created successfully'
@@ -179,6 +192,7 @@ export default function PlayerManagementScreen() {
         fetchPlayers();
       } else {
         console.error('❌ [PLAYERS] Save failed:', result.error);
+        haptic.error();
         
         // Check for specific error types
         if (result.error?.includes('Unauthorized') || result.error?.includes('User not found')) {
@@ -199,6 +213,7 @@ export default function PlayerManagementScreen() {
       }
     } catch (error) {
       console.error('❌ [PLAYERS] Error saving player:', error);
+      haptic.error();
       const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
       Alert.alert('Error', `Failed to save player: ${errorMsg}`);
     }

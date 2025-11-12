@@ -2,9 +2,9 @@ import { Tabs } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Alert, TouchableOpacity } from 'react-native';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { HapticTab } from '@/src/components-shared/haptic-tab';
+import { IconSymbol } from '@/src/components-shared/ui/icon-symbol';
+import { useColorScheme } from '@/src/hooks/use-color-scheme';
 import { useAuth } from '@/src/context/AuthContext';
 import { useGame } from '@/src/context/GameContext';
 

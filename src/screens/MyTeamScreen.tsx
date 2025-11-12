@@ -1,15 +1,16 @@
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect } from 'react';
 import {
-  AccessibilityInfo,
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    AccessibilityInfo,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { useGame } from '../context/GameContext';
+import haptic from '../utils/haptics';
 
 export default function MyTeamScreen() {
   const {
@@ -60,6 +61,7 @@ export default function MyTeamScreen() {
     // Validate player ID
     if (!playerId || typeof playerId !== 'number' || playerId <= 0) {
       console.error(`❌ [MY TEAM] Invalid player ID: ${playerId}`);
+      haptic.error();
       Alert.alert('Error', 'Invalid player. Please refresh and try again.');
       return;
     }
@@ -68,6 +70,7 @@ export default function MyTeamScreen() {
     const player = players.find(p => p.id === playerId);
     if (!player) {
       console.error(`❌ [MY TEAM] Player not found: ${playerId}`);
+      haptic.error();
       Alert.alert(
         'Player Not Found',
         'This player no longer exists. Please refresh the player list.',
@@ -79,6 +82,7 @@ export default function MyTeamScreen() {
     // Verify player is actually in the team
     if (!selectedPlayers.includes(playerId)) {
       console.warn(`⚠️ [MY TEAM] Player ${playerName} is not in the team`);
+      haptic.warning();
       Alert.alert(
         'Invalid Operation',
         'This player is not in your team.',
@@ -92,6 +96,7 @@ export default function MyTeamScreen() {
     
     if (freeTransfersRemaining <= 0) {
       console.log(`⚠️ [MY TEAM] No free transfers - penalty will apply (-${pointsConfig.transferPenalty} points)`);
+      haptic.warning();
       Alert.alert(
         'Transfer Penalty',
         `You have exceeded your free transfer limit. This will deduct ${pointsConfig.transferPenalty} points from your total. Do you want to continue?`,
@@ -101,6 +106,7 @@ export default function MyTeamScreen() {
             style: 'cancel',
             onPress: () => {
               console.log('❌ [MY TEAM] Transfer cancelled by user');
+              haptic.light();
               AccessibilityInfo.announceForAccessibility('Transfer cancelled');
             }
           },
@@ -109,6 +115,7 @@ export default function MyTeamScreen() {
             style: 'destructive',
             onPress: () => {
               console.log('✅ [MY TEAM] User confirmed transfer with penalty');
+              haptic.medium();
               removePlayer(playerId);
               AccessibilityInfo.announceForAccessibility(
                 `${playerName} removed. ${pointsConfig.transferPenalty} points deducted`
@@ -120,6 +127,7 @@ export default function MyTeamScreen() {
       );
     } else {
       console.log(`✅ [MY TEAM] Free transfer available - no penalty`);
+      haptic.light();
       removePlayer(playerId);
       AccessibilityInfo.announceForAccessibility(
         `${playerName} removed. ${freeTransfersRemaining - 1} free transfers remaining`

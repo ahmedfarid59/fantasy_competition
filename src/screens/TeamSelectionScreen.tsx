@@ -12,6 +12,7 @@ import {
 import { useGame } from '../context/GameContext';
 import { Player } from '../types';
 import { ErrorHandler } from '../utils/errorHandler';
+import haptic from '../utils/haptics';
 import { playSound, SoundEffect } from '../utils/sounds';
 
 export default function TeamSelectionScreen() {
@@ -158,11 +159,13 @@ export default function TeamSelectionScreen() {
     
     if (selectedPlayers.includes(player.id)) {
       console.log('📤 [TeamSelection] Removing player:', player.name);
+      haptic.light();
       removePlayer(player.id);
       playSound(SoundEffect.SWIPE);
       ErrorHandler.logSuccess(context, { action: 'removed', playerId: player.id });
     } else if (canSelectPlayer(player.id)) {
       console.log('📥 [TeamSelection] Adding player:', player.name);
+      haptic.medium();
       selectPlayer(player.id);
       playSound(SoundEffect.CLICK);
       ErrorHandler.logSuccess(context, { action: 'selected', playerId: player.id });
@@ -172,6 +175,7 @@ export default function TeamSelectionScreen() {
       
       if (roundInfo && selectedPlayers.length >= roundInfo.playersAllowed) {
         console.log(`⛔ [TEAM SELECTION] Reason: Team is full (${selectedPlayers.length}/${roundInfo.playersAllowed})`);
+        haptic.warning();
         Alert.alert(
           'Team Full',
           `You can only select ${roundInfo.playersAllowed} players for this round.`,
@@ -183,6 +187,7 @@ export default function TeamSelectionScreen() {
         );
       } else if (roundInfo?.budget && player.price > remainingBudget) {
         console.log(`⛔ [TEAM SELECTION] Reason: Budget exceeded (Need: ${player.price / 1000000}M, Have: ${remainingBudget / 1000000}M)`);
+        haptic.warning();
         Alert.alert(
           'Budget Exceeded',
           `Not enough budget. You need ${formatCurrency(player.price)} but only have ${formatCurrency(remainingBudget)} remaining.`,
@@ -230,6 +235,7 @@ export default function TeamSelectionScreen() {
         required: roundInfo.playersAllowed,
         difference: roundInfo.playersAllowed - selectedPlayers.length,
       });
+      haptic.error();
       Alert.alert(
         'Incomplete Team',
         `Please select exactly ${roundInfo.playersAllowed} players.`,
@@ -252,6 +258,7 @@ export default function TeamSelectionScreen() {
       });
       console.log('✅ [TeamSelection] Team saved successfully');
       
+      haptic.success();
       playSound(SoundEffect.SUCCESS);
       Alert.alert(
         'Team Saved',
@@ -265,6 +272,7 @@ export default function TeamSelectionScreen() {
         error: error instanceof Error ? error.message : error,
         stack: error instanceof Error ? error.stack : undefined,
       });
+      haptic.error();
       ErrorHandler.handleError(error, { context });
     }
   };

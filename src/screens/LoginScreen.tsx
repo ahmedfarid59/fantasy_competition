@@ -12,6 +12,7 @@ import {
     View,
 } from 'react-native';
 import { ErrorHandler } from '../utils/errorHandler';
+import haptic from '../utils/haptics';
 import { ServerConfig } from '../utils/serverConfig';
 
 interface LoginScreenProps {
@@ -46,12 +47,14 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
     // Validation
     if (!username.trim() || !password.trim()) {
       console.warn('⚠️ [LoginScreen] Validation failed: Missing username or password');
+      haptic.error();
       Alert.alert('Error', 'Username and password are required');
       return;
     }
 
     if (!isLogin && (!name.trim() || !email.trim())) {
       console.warn('⚠️ [LoginScreen] Validation failed: Missing name or email for registration');
+      haptic.error();
       Alert.alert('Error', 'All fields are required for registration');
       return;
     }
@@ -101,6 +104,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
           isAdmin: data.user.isAdmin,
         });
         
+        haptic.success();
         ErrorHandler.logSuccess(context, {
           userId: data.user.id,
           isAdmin: data.user.isAdmin,
@@ -116,6 +120,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
           message: data.message,
           success: data.success,
         });
+        haptic.error();
         ErrorHandler.handleError(data.message || 'Authentication failed', { context, showAlert: false });
         Alert.alert('Error', data.message || 'Authentication failed');
       }
@@ -124,6 +129,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
         error: error instanceof Error ? error.message : error,
         stack: error instanceof Error ? error.stack : undefined,
       });
+      haptic.error();
       ErrorHandler.handleError(error, { context, showAlert: false });
       Alert.alert(
         'Connection Error',
@@ -207,7 +213,10 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
 
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
-            onPress={handleSubmit}
+            onPress={() => {
+              haptic.medium();
+              handleSubmit();
+            }}
             disabled={loading}
           >
             {loading ? (
@@ -222,6 +231,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
           <TouchableOpacity
             style={styles.switchButton}
             onPress={() => {
+              haptic.light();
               setIsLogin(!isLogin);
               setUsername('');
               setPassword('');

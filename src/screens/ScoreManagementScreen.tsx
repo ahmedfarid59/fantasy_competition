@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import haptic from '../utils/haptics';
 
 interface Player {
   id: number;
@@ -98,6 +99,7 @@ export default function ScoreManagementScreen() {
 
   const handleSaveScores = async () => {
     if (!selectedRound) {
+      haptic.error();
       Alert.alert('Error', 'Please select a round');
       return;
     }
@@ -112,6 +114,7 @@ export default function ScoreManagementScreen() {
       
       if (isNaN(points)) {
         hasError = true;
+        haptic.error();
         Alert.alert('Error', `Invalid score for ${player.name}`);
         return;
       }
@@ -140,12 +143,15 @@ export default function ScoreManagementScreen() {
               });
 
               if (response.success) {
+                haptic.success();
                 Alert.alert('Success', 'Scores updated successfully!');
               } else {
+                haptic.error();
                 Alert.alert('Error', response.error || 'Failed to update scores');
               }
             } catch (error: any) {
               console.error('❌ [SCORES] Error:', error);
+              haptic.error();
               Alert.alert('Error', error.message || 'Failed to update scores');
             } finally {
               setSaving(false);
