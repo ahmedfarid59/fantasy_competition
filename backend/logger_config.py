@@ -18,11 +18,10 @@ LOG_FILE = LOGS_DIR / f"backend_{timestamp}.log"
 LATEST_LOG = LOGS_DIR / "backend_latest.log"
 
 # Configure logging format
-LOG_FORMAT = "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
-DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+LOG_FORMAT = "%(levelname)-8s | %(name)s | %(message)s"
 
 # Create formatter
-formatter = logging.Formatter(LOG_FORMAT, DATE_FORMAT)
+formatter = logging.Formatter(LOG_FORMAT)
 
 # File handler - writes to timestamped file
 file_handler = logging.FileHandler(LOG_FILE, encoding='utf-8')
