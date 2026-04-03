@@ -43,7 +43,7 @@ app-example
 /android
 
 # logs
-logs/
+logs/*
 *.log
 *.log.*
 !logs/.gitkeep
@@ -96,4 +96,4 @@ config/*.json
 Thumbs.db
 
 # Deployment
-render.yaml
+# render.yaml is intentionally tracked so Render can auto-deploy

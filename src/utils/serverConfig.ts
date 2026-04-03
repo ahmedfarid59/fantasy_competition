@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SERVER_URL_KEY = '@fantasy_server_url';
-const DEFAULT_SERVER_URL = 'http://10.40.47.201:5000';
+const DEFAULT_SERVER_URL = 'http://localhost:5000';
 
 export class ServerConfig {
   private static serverUrl: string = DEFAULT_SERVER_URL;

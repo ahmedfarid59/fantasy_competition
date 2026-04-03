@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: fantasy-competition-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///./fantasy_competition.db
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    healthCheckPath: /health

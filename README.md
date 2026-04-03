@@ -1,629 +1,362 @@
-# Fantasy Competition App# Fantasy Competition App# Deploy FastAPI on Render
-
-
-
-A full-stack fantasy sports competition application built with React Native (Expo) and FastAPI.
-
-
-
-## 🏗️ Project StructureA full-stack fantasy sports application with React Native frontend and FastAPI backend.Use this repo as a template to deploy a Python [FastAPI](https://fastapi.tiangolo.com) service on Render.
-
-
-
-```
-
-fantasy-competition/
-
-├── app/                    # 📱 Expo Router (Navigation)## Project StructureSee https://render.com/docs/deploy-fastapi or follow the steps below:
-
-│   ├── (tabs)/            # Tab-based navigation
-
-│   │   ├── index.tsx      # Home/Dashboard
-
-│   │   ├── explore.tsx    # Team Selection
-
-│   │   ├── myteam.tsx     # My Team Management```## Manual Steps
-
-│   │   ├── leaderboard.tsx # Leaderboard View
-
-│   │   ├── admin.tsx      # Admin Panelfantasy-competition/
-
-│   │   └── settings.tsx   # Settings
-
-│   ├── _layout.tsx        # Root layout with auth├── backend/                  # Python FastAPI Backend1. You may use this repository directly or [create your own repository from this template](https://github.com/render-examples/fastapi/generate) if you'd like to customize the code.
-
-│   └── modal.tsx          # Modal screens
-
-││   ├── __init__.py2. Create a new Web Service on Render.
-
-├── src/                    # 🎨 Frontend Code
-
-│   ├── components/        # Screen-specific components│   ├── main.py              # FastAPI application3. Specify the URL to your new repository or this repository.
-
-│   │   └── ErrorBoundary.tsx
-
-│   ││   ├── models.py            # Database models4. Render will automatically detect that you are deploying a Python service and use `pip` to download the dependencies.
-
-│   ├── components-shared/ # Reusable UI components
-
-│   │   ├── haptic-tab.tsx # Tab with haptic feedback│   ├── database.py          # Database configuration5. Specify the following as the Start Command.
-
-│   │   ├── themed-text.tsx # Themed text component
-
-│   │   ├── themed-view.tsx # Themed view component│   ├── crud.py              # CRUD operations
-
-│   │   └── ui/
-
-│   │       ├── icon-symbol.tsx│   ├── auth.py              # Authentication    ```shell
-
-│   │       └── icon-symbol.ios.tsx
-
-│   ││   ├── logger_config.py     # Logging configuration    uvicorn main:app --host 0.0.0.0 --port $PORT
-
-│   ├── constants/         # App constants
-
-│   │   └── theme.ts       # Light/Dark theme colors│   ├── requirements.txt     # Python dependencies    ```
-
-│   │
-
-│   ├── context/           # React Context providers│   └── README.md            # Backend documentation
-
-│   │   ├── AuthContext.tsx # Authentication state
-
-│   │   └── GameContext.tsx # Game state management│6. Click Create Web Service.
-
-│   │
-
-│   ├── hooks/             # Custom React hooks├── app/                     # Expo Router App Routes
-
-│   │   ├── use-color-scheme.ts
-
-│   │   ├── use-color-scheme.web.ts│   ├── (tabs)/             # Tab navigation screensOr simply click:
-
-│   │   └── use-theme-color.ts
-
-│   ││   ├── _layout.tsx         # Root layout
-
-│   ├── screens/           # Screen components
-
-│   │   ├── AdminScreen.tsx│   └── modal.tsx           # Modal screen[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/render-examples/fastapi)
-
-│   │   ├── DashboardScreen.tsx
-
-│   │   ├── HelpScreen.tsx│
-
-│   │   ├── HomeScreen.tsx
-
-│   │   ├── LoginScreen.tsx├── src/                    # React Native Source Code## Thanks
-
-│   │   ├── MatchManagementScreen.tsx
-
-│   │   ├── MyTeamScreen.tsx│   ├── components/         # Reusable components
-
-│   │   ├── PlayerManagementScreen.tsx
-
-│   │   ├── ProfileEditScreen.tsx│   ├── context/           # React context providersThanks to [Harish](https://harishgarg.com) for the [inspiration to create a FastAPI quickstart for Render](https://twitter.com/harishkgarg/status/1435084018677010434) and for some sample code!
-
-│   │   ├── RoundManagementScreen.tsx│   ├── screens/           # Screen components
-
-│   │   ├── ScoreManagementScreen.tsx│   ├── services/          # API services
-
-│   │   ├── SettingsScreen.tsx│   ├── types/             # TypeScript types
-
-│   │   └── TeamSelectionScreen.tsx│   └── utils/             # Utility functions
-
-│   ││
-
-│   ├── services/          # External services├── components/            # Shared UI components
-
-│   │   └── api.ts         # API client│   ├── haptic-tab.tsx
-
-│   ││   ├── themed-text.tsx
-
-│   ├── types/             # TypeScript definitions│   ├── themed-view.tsx
-
-│   │   └── index.ts│   └── ui/
-
-│   ││
-
-│   └── utils/             # Utility functions├── assets/               # Images and static assets
-
-│       ├── connectionTester.ts # Network connectivity├── hooks/                # Custom React hooks
-
-│       ├── errorHandler.ts    # Error handling├── constants/            # Constants and themes
-
-│       ├── fileLogger.ts      # File logging├── .venv/               # Python virtual environment
-
-│       ├── haptics.ts         # Haptic feedback└── node_modules/        # Node.js dependencies
-
-│       ├── retryHelper.ts     # Retry logic```
-
-│       ├── serverConfig.ts    # Server configuration
-
-│       └── sounds.ts          # Sound effects## Quick Start
-
-│
-
-├── backend/                # 🐍 Python FastAPI Backend### Prerequisites
-
-│   ├── main.py            # FastAPI app entry point
-
-│   ├── models.py          # SQLAlchemy models- Node.js (v18 or higher)
-
-│   ├── database.py        # Database configuration- Python 3.8+
-
-│   ├── crud.py            # CRUD operations- npm or yarn
-
-│   ├── auth.py            # Authentication logic- Expo CLI
-
-│   ├── logger_config.py   # Logging configuration
-
-│   ├── requirements.txt   # Python dependencies### Backend Setup
-
-│   └── README.md          # Backend documentation
-
-│1. **Navigate to backend folder:**
-
-├── assets/                 # 📦 Static Assets   ```bash
-
-│   └── images/   cd backend
-
-│   ```
-
-└── Configuration Files
-
-    ├── app.json           # Expo configuration2. **Create virtual environment (if not exists):**
-
-    ├── package.json       # Node dependencies   ```bash
-
-    ├── tsconfig.json      # TypeScript config   python -m venv ../.venv
-
-    └── eslint.config.js   # ESLint rules   ```
-
-```
-
-3. **Activate virtual environment:**
-
-## 🚀 Quick Start   - Windows: `.venv\Scripts\activate`
-
-   - macOS/Linux: `source .venv/bin/activate`
-
-### Prerequisites
-
-4. **Install dependencies:**
-
-- **Node.js** (v18 or higher)   ```bash
-
-- **Python** 3.8+   pip install -r requirements.txt
-
-- **npm** or **yarn**   ```
-
-- **Expo CLI** (optional, can use npx)
-
-5. **Start backend server:**
-
-### Frontend Setup   ```bash
-
-   uvicorn main:app --reload --host 0.0.0.0 --port 5000
-
-```bash   ```
-
-# Install dependencies
-
-npm install   Or use the startup script from project root:
-
-   - Windows: `start-backend.bat`
-
-# Start the Expo development server   - macOS/Linux: `./start-backend.sh`
-
-npx expo start
-
-### Frontend Setup
-
-# Options:
-
-# - Press 'a' for Android emulator1. **Install dependencies:**
-
-# - Press 'i' for iOS simulator   ```bash
-
-# - Press 'w' for web browser   npm install
-
-# - Scan QR code with Expo Go app on your phone   ```
-
-```
-
-2. **Start Expo development server:**
-
-### Backend Setup   ```bash
-
-   npx expo start
-
-#### Windows   ```
-
-```bash
-
-# Navigate to backend folder3. **Run on device/simulator:**
-
-cd backend   - Press `a` for Android
-
-   - Press `i` for iOS
-
-# Install dependencies   - Scan QR code with Expo Go app
-
-pip install -r requirements.txt
-
-## Configuration
-
-# Run the server
-
-python main.py### Backend Configuration
-
-
-
-# Or use the startup script- **Server URL**: Update in `src/utils/serverConfig.ts`
-
-start-backend.bat- **Database**: SQLite database created in `backend/fantasy_competition.db`
-
-```- **Port**: Default 5000 (configured in startup scripts)
-
-
-
-#### Linux/Mac### Frontend Configuration
-
-```bash
-
-cd backend1. **Configure server URL in app:**
-
-pip install -r requirements.txt   - Open Settings tab
-
-uvicorn main:app --reload --host 0.0.0.0 --port 5000   - Enter server URL (e.g., `http://192.168.1.100:5000`)
-
-   - Save settings
-
-# Or use the startup script
-
-chmod +x start-backend.sh2. **For development:**
-
-./start-backend.sh   - Find your computer's IP address
-
-```   - Use `http://[YOUR_IP]:5000` as server URL
-
-   - Example: `http://192.168.1.100:5000`
+# Fantasy Competition
+
+A full-stack fantasy sports competition application built with **React Native (Expo)** for mobile and **FastAPI** for the backend API.
+
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Tech Stack](#️-tech-stack)
+- [Project Structure](#️-project-structure)
+- [Quick Start](#-quick-start)
+- [Configuration](#-configuration)
+- [API Reference](#-api-reference)
+- [App Navigation](#-app-navigation)
+- [Deployment](#-deployment)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ## 🎯 Features
 
-## Features
-
 ### User Features
-
-- **Authentication** - Secure login/signup with JWT tokens### User Features
-
-- **Team Management** - Create and manage fantasy teams- ✅ User registration and authentication
-
-- **Player Selection** - Browse and select players- ✅ Team selection with budget constraints
-
-- **Live Scoring** - Real-time score updates- ✅ Player transfers with penalty system
-
-- **Leaderboard** - Track rankings and compete- ✅ Live leaderboard
-
-- **Dark Mode** - Automatic light/dark theme support- ✅ Round-based scoring
-
-- **Haptic Feedback** - Enhanced touch interactions- ✅ Haptic feedback on interactions
-
-- ✅ Dark mode support
+- ✅ User registration and login with bcrypt password hashing
+- ✅ Fantasy team selection with budget constraints
+- ✅ Player transfers with configurable penalty system
+- ✅ Captain selection (2× points multiplier)
+- ✅ Round-based scoring and leaderboard
+- ✅ Dark mode (auto-detects system preference)
+- ✅ Haptic feedback on interactions
 
 ### Admin Features
-
-- **Player Management** - Add, edit, remove players### Admin Features
-
-- **Match Management** - Create and manage matches- ✅ Player management (add, edit, delete)
-
-- **Score Management** - Update player scores- ✅ Round management
-
-- **Round Management** - Control game rounds- ✅ Match scheduling
-
-- **User Management** - Manage user accounts- ✅ Score updates
-
-- ✅ Database export/import
+- ✅ Player management (add, edit, delete, set prices)
+- ✅ Round management (deadlines, budgets, transfer rules)
+- ✅ Match scheduling
+- ✅ Score updates per round
+- ✅ Database export / import (JSON)
 
 ### Technical Features
+- ✅ Full TypeScript frontend
+- ✅ Automatic retry logic for failed API requests
+- ✅ Comprehensive error handling and structured logging
+- ✅ Network connectivity testing utility
+- ✅ Cross-platform (iOS, Android, Web)
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Mobile / Web | React Native 0.81 · Expo 54 · Expo Router |
+| Language (frontend) | TypeScript |
+| State management | React Context |
+| Backend framework | FastAPI 0.115 |
+| Language (backend) | Python 3.8+ |
+| ORM | SQLAlchemy 2.0 |
+| Database | SQLite (dev) · PostgreSQL (prod) |
+| Auth | bcrypt password hashing + header-based session |
+| Server | Uvicorn / Gunicorn |
+
+## 🗂️ Project Structure
 
-- **Offline Support** - Local caching and sync## API Documentation
-
-- **Error Handling** - Comprehensive error management
-
-- **Retry Logic** - Automatic retry for failed requestsWhen backend is running, access API documentation at:
-
-- **File Logging** - Detailed logging for debugging- Swagger UI: http://localhost:5000/docs
-
-- **Connection Testing** - Network connectivity checks- ReDoc: http://localhost:5000/redoc
-
-- **Type Safety** - Full TypeScript implementation
-
-## Development
-
-## 🛠️ Technology Stack
-
-### Backend Development
-
-### Frontend
-
-- **React Native** - Cross-platform mobile framework```bash
-
-- **Expo** (~54.0.22) - Development platformcd backend
-
-- **Expo Router** (~6.0.14) - File-based navigationuvicorn main:app --reload --host 0.0.0.0 --port 5000
-
-- **TypeScript** - Type-safe development```
-
-- **React Context** - State management
-
-- **expo-haptics** - Haptic feedbackLogs are printed to console with detailed information about:
-
-- API requests/responses
-
-### Backend- Database operations
-
-- **FastAPI** - Modern Python web framework- Authentication events
-
-- **SQLAlchemy** - ORM for database operations- Errors with tracebacks
-
-- **SQLite** - Local database (production: PostgreSQL recommended)
-
-- **JWT** - Authentication tokens### Frontend Development
-
-- **Pydantic** - Data validation
-
-- **uvicorn** - ASGI server```bash
-
-npx expo start
-
-## 📱 App Navigation```
-
-
-
-```- Hot reload enabled by default
-
-┌─────────────────────────────────────┐- Use Expo Go app for testing on physical device
-
-│         Authentication              │- Use Android Studio/Xcode for emulator testing
-
-│         (LoginScreen)               │
-
-└─────────────┬───────────────────────┘## Technologies
-
-              │
-
-              ▼### Backend
-
-┌─────────────────────────────────────┐- **FastAPI**: Modern Python web framework
-
-│         Tab Navigation              │- **SQLAlchemy**: SQL ORM
-
-├─────────────────────────────────────┤- **SQLite**: Database
-
-│ 🏠 Home      - Dashboard            │- **Uvicorn**: ASGI server
-
-│ 🔍 Explore   - Team Selection       │- **Bcrypt**: Password hashing
-
-│ ⚽ My Team   - Team Management       │
-
-│ 🏆 Leaderboard - Rankings           │### Frontend
-
-│ ⚙️  Admin    - Admin Panel          │- **React Native**: Mobile framework
-
-│ ⚙️  Settings - User Settings        │- **Expo**: Development platform
-
-└─────────────────────────────────────┘- **TypeScript**: Type safety
-
-```- **Expo Router**: File-based routing
-
-- **React Context**: State management
-
-## 🔐 API Endpoints- **Expo Haptics**: Tactile feedback
-
-
-
-### Authentication## Project Documentation
-
-- `POST /signup` - Register new user
-
-- `POST /login` - User login- `backend/README.md` - Backend API documentation
-
-- `GET /users/me` - Get current user- `HAPTIC_FEEDBACK.md` - Haptic feedback implementation guide
-
-
-
-### Players## Troubleshooting
-
-- `GET /players` - Get all players
-
-- `GET /players/{id}` - Get player details### Backend Issues
-
-- `POST /players` - Create player (admin)
-
-- `PUT /players/{id}` - Update player (admin)**Port already in use:**
-
-- `DELETE /players/{id}` - Delete player (admin)```bash
-
-# Change port in startup script or run:
-
-### Teamsuvicorn main:app --reload --host 0.0.0.0 --port 5001
-
-- `GET /teams` - Get all teams```
-
-- `GET /teams/{id}` - Get team details
-
-- `POST /teams` - Create team**Database locked:**
-
-- `PUT /teams/{id}` - Update team- Stop all backend processes
-
-- Delete `backend/fantasy_competition.db`
-
-### Matches & Scoring- Restart backend (database will be recreated)
-
-- `GET /matches` - Get all matches
-
-- `POST /matches` - Create match (admin)### Frontend Issues
-
-- `PUT /matches/{id}/scores` - Update scores (admin)
-
-**Cannot connect to backend:**
-
-See `backend/README.md` for complete API documentation.1. Verify backend is running
-
-2. Check firewall settings
-
-## 🎨 Theme System3. Ensure server URL in app settings is correct
-
-4. Make sure device and computer are on same network
-
-The app supports automatic light/dark mode based on system preferences:
-
-**Metro bundler issues:**
-
-```typescript```bash
-
-// Light Themenpx expo start -c  # Clear cache
-
-const light = {```
-
-  text: '#11181C',
-
-  background: '#fff',## License
-
-  tint: '#0a7ea4',
-
-  icon: '#687076',Private project for personal use.
-
-  tabIconDefault: '#687076',
-  tabIconSelected: '#0a7ea4'
-};
-
-// Dark Theme
-const dark = {
-  text: '#ECEDEE',
-  background: '#151718',
-  tint: '#fff',
-  icon: '#9BA1A6',
-  tabIconDefault: '#9BA1A6',
-  tabIconSelected: '#fff'
-};
 ```
+fantasy-competition/
+├── app/                        # Expo Router navigation
+│   ├── (tabs)/                 # Tab-based screens
+│   │   ├── index.tsx           # Home / Dashboard
+│   │   ├── explore.tsx         # Team Selection
+│   │   ├── myteam.tsx          # My Team Management
+│   │   ├── leaderboard.tsx     # Leaderboard
+│   │   ├── admin.tsx           # Admin Panel
+│   │   └── settings.tsx        # User Settings
+│   ├── _layout.tsx             # Root layout (auth guard)
+│   └── modal.tsx               # Modal screens
+│
+├── src/                        # Frontend source code
+│   ├── components/             # Screen-specific components
+│   ├── components-shared/      # Reusable UI components
+│   │   ├── haptic-tab.tsx
+│   │   ├── themed-text.tsx
+│   │   ├── themed-view.tsx
+│   │   └── ui/
+│   ├── constants/
+│   │   └── theme.ts            # Light / Dark theme colours
+│   ├── context/
+│   │   ├── AuthContext.tsx     # Authentication state
+│   │   └── GameContext.tsx     # Game state
+│   ├── hooks/                  # Custom React hooks
+│   ├── screens/                # Screen implementations
+│   ├── services/
+│   │   └── api.ts              # API client
+│   ├── types/
+│   │   └── index.ts            # TypeScript interfaces
+│   └── utils/
+│       ├── connectionTester.ts # Network connectivity check
+│       ├── errorHandler.ts     # Error formatting
+│       ├── fileLogger.ts       # File-based logging
+│       ├── haptics.ts          # Haptic helpers
+│       ├── retryHelper.ts      # Automatic retry logic
+│       ├── serverConfig.ts     # Server URL (persisted)
+│       └── sounds.ts           # Sound effects
+│
+├── backend/                    # Python FastAPI backend
+│   ├── main.py                 # App entry point & routes
+│   ├── models.py               # Pydantic request/response models
+│   ├── database.py             # SQLAlchemy models & DB init
+│   ├── crud.py                 # Database CRUD operations
+│   ├── auth.py                 # Auth helpers & validators
+│   ├── logger_config.py        # Logging setup
+│   └── requirements.txt        # Python dependencies
+│
+├── assets/                     # Images and icons
+├── app.json                    # Expo configuration
+├── package.json                # Node dependencies
+├── tsconfig.json               # TypeScript config
+└── render.yaml                 # Render deployment config
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** v18 or higher
+- **Python** 3.8 or higher
+- **npm** or **yarn**
+- **Expo Go** app (optional — for testing on a physical device)
+
+### 1. Backend
+
+```bash
+cd backend
+
+# Create and activate a virtual environment
+python -m venv ../.venv
+# Windows:
+.venv\Scripts\activate
+# macOS / Linux:
+source ../.venv/bin/activate
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Start the development server
+uvicorn main:app --reload --host 0.0.0.0 --port 5000
+```
+
+The API will be available at `http://localhost:5000`.
+Interactive docs: `http://localhost:5000/docs`
+
+### 2. Frontend
+
+```bash
+# From the project root
+
+# Install Node dependencies
+npm install
+
+# Start the Expo dev server
+npx expo start
+```
+
+Then:
+- Press **`a`** — open Android emulator
+- Press **`i`** — open iOS simulator
+- Press **`w`** — open in web browser
+- Scan the **QR code** with the Expo Go app on your phone
 
 ## 🔧 Configuration
 
-### Server Configuration
-Update `src/utils/serverConfig.ts`:
-```typescript
-export const SERVER_CONFIG = {
-  baseURL: 'http://192.168.1.100:5000', // Your server IP
-  timeout: 10000,
-  retryAttempts: 3
-};
-```
+### Backend server URL (mobile app)
 
-### Environment Variables
-Create `.env` file in backend:
-```
-DATABASE_URL=sqlite:///./fantasy_competition.db
-SECRET_KEY=your-secret-key-here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-```
+The app stores the server URL in device storage. To change it:
 
-## 🧪 Testing
+1. Open the app and go to the **Settings** tab.
+2. Enter your server URL (e.g. `http://192.168.1.100:5000`).
+3. Tap **Save**.
+
+> **Tip:** Your phone and your computer must be on the same Wi-Fi network. Use your machine's local IP address, not `localhost`.
+
+### Backend environment variables
+
+Copy `backend/.env.example` to `backend/.env` and edit as needed:
 
 ```bash
-# Frontend - Run Expo in test mode
-npm test
-
-# Backend - Run pytest
-cd backend
-pytest
+cp backend/.env.example backend/.env
 ```
 
-## 📝 Development Guidelines
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATABASE_URL` | `sqlite:///./fantasy_competition.db` | Database connection string |
+| `HOST` | `0.0.0.0` | Server bind address |
+| `PORT` | `5000` | Server port |
 
-### Code Organization
-- **Navigation files** go in `app/` - Keep lightweight
-- **Implementation code** goes in `src/` - All logic here
-- **Backend code** in `backend/` - Isolated Python environment
+> **Note:** The backend uses bcrypt password hashing with a simple `X-User-Id` session header for authentication.
 
-### Import Convention
-```typescript
-// Use @/src prefix for src imports
-import { ThemedText } from '@/src/components-shared/themed-text';
-import { useColorScheme } from '@/src/hooks/use-color-scheme';
-import { Colors } from '@/src/constants/theme';
+### Theme
 
-// App navigation imports
-import { Tabs } from 'expo-router';
+The app automatically follows the system light/dark preference. Colours are defined in `src/constants/theme.ts`.
+
+## 🔐 API Reference
+
+Full interactive documentation is available at `http://localhost:5000/docs` while the backend is running.
+
+### Authentication
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/api/auth/register` | Register a new user |
+| `POST` | `/api/auth/login` | Login and start session |
+| `POST` | `/api/auth/verify` | Verify session token |
+| `DELETE` | `/api/auth/account` | Delete user account |
+
+### Players
+
+| Method | Path | Auth |
+|--------|------|------|
+| `GET` | `/api/players` | Any |
+| `GET` | `/api/players/qualified` | Any |
+| `POST` | `/api/players` | Admin |
+| `PUT` | `/api/players/{id}` | Admin |
+| `DELETE` | `/api/players/{id}` | Admin |
+
+### Rounds
+
+| Method | Path | Auth |
+|--------|------|------|
+| `GET` | `/api/rounds` | Any |
+| `GET` | `/api/rounds/current` | Any |
+| `POST` | `/api/rounds` | Admin |
+| `PUT` | `/api/rounds/{round}` | Admin |
+| `DELETE` | `/api/rounds/{round}` | Admin |
+
+### Teams & Transfers
+
+| Method | Path | Auth |
+|--------|------|------|
+| `GET` | `/api/teams` | User |
+| `POST` | `/api/teams` | User |
+| `POST` | `/api/transfers` | User |
+
+### Matches & Scoring
+
+| Method | Path | Auth |
+|--------|------|------|
+| `GET` | `/api/matches` | Any |
+| `GET` | `/api/matches/round/{round}` | Any |
+| `POST` | `/api/matches` | Admin |
+| `PUT` | `/api/matches/{id}` | Admin |
+| `DELETE` | `/api/matches/{id}` | Admin |
+| `POST` | `/api/scores` | Admin |
+| `GET` | `/api/leaderboard` | Any |
+| `GET` | `/api/leaderboard/round/{round}` | Any |
+
+### Data Management
+
+| Method | Path | Auth |
+|--------|------|------|
+| `GET` | `/api/export` | Admin |
+| `POST` | `/api/import` | Admin |
+
+## 📱 App Navigation
+
+```
+Login Screen
+     │
+     ▼
+Tab Navigation
+├── 🏠 Home          — Dashboard & recent activity
+├── 🔍 Explore       — Browse & select players
+├── ⚽ My Team        — Manage your squad
+├── 🏆 Leaderboard   — Rankings
+├── 🛡️ Admin         — Admin panel (admin users only)
+└── ⚙️  Settings      — Server URL & preferences
 ```
 
-### Adding New Screens
-1. Create component in `src/screens/MyScreen.tsx`
-2. Export from screen component
-3. Import in `app/(tabs)/myroute.tsx`
-4. Add navigation route
+## 🚢 Deployment
 
-### Adding New Features
-1. Create types in `src/types/index.ts`
-2. Add API calls in `src/services/api.ts`
-3. Create context if needed in `src/context/`
-4. Build screen in `src/screens/`
-5. Add navigation route in `app/`
+### Backend on Render
+
+The repository includes a `render.yaml` for one-click deployment of the backend to [Render](https://render.com).
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+
+**Manual steps:**
+
+1. Create a **Web Service** on Render and connect this repository.
+2. Render auto-detects Python and installs dependencies via `pip`.
+3. Set the **Start Command** to:
+   ```
+   cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+   ```
+4. (Optional) Add environment variables in the Render dashboard.
+
+**Production checklist:**
+
+- [ ] Switch `DATABASE_URL` to a PostgreSQL connection string
+- [ ] Update CORS `allow_origins` in `backend/main.py` to your exact domain
+- [ ] Remove `--reload` flag from the start command
+- [ ] Consider running with Gunicorn for multi-worker support:
+  ```
+  cd backend && gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+  ```
+
+### Frontend (Expo / EAS)
+
+For production mobile builds, use [Expo Application Services (EAS)](https://docs.expo.dev/eas/):
+
+```bash
+npm install -g eas-cli
+eas build --platform all
+```
+
+For a static web build:
+
+```bash
+npx expo export --platform web
+# Output is in the dist/ folder — deploy to any static host
+```
 
 ## 🐛 Troubleshooting
 
-### "Cannot find module" errors
-These are usually TypeScript cache issues:
-1. Clear cache: `rm -rf .expo node_modules/.cache`
-2. Reinstall: `npm install`
-3. Reload VS Code
+### Backend won't start — port in use
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 5001
+```
 
-### Backend connection issues
-1. Check server is running: `http://localhost:5000`
-2. Verify IP in `serverConfig.ts` matches your machine
-3. Check firewall allows port 5000
-4. Use `connectionTester.ts` utility
+### Database locked / corrupt
+```bash
+# Stop the backend, then delete the database file
+rm backend/fantasy_competition.db
+# Restart backend — it will recreate the database automatically
+```
 
-### Expo app crashes
-1. Clear Expo cache: `npx expo start -c`
-2. Check error logs in terminal
-3. Verify all dependencies installed
-4. Check `fileLogger.ts` for detailed logs
+### App can't connect to backend
+1. Make sure the backend is running (`http://localhost:5000/health`).
+2. Open **Settings** in the app and verify the server URL.
+3. Ensure your phone and computer are on the **same Wi-Fi network**.
+4. Check that your firewall allows port `5000`.
 
-## 📚 Additional Documentation
+### Metro bundler / cache issues
+```bash
+npx expo start -c   # clears Metro cache
+```
 
-- **Backend API**: See `backend/README.md`
-- **Frontend Organization**: See `FRONTEND_ORGANIZATION.md`
-- **Backend Migration**: See `BACKEND_MIGRATION.md` (if exists)
+### "Cannot find module" TypeScript errors
+```bash
+rm -rf .expo node_modules/.cache
+npm install
+```
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open Pull Request
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/my-feature`.
+3. Commit your changes: `git commit -m 'feat: add my feature'`.
+4. Push to your branch: `git push origin feature/my-feature`.
+5. Open a Pull Request.
 
 ## 📄 License
 
-This project is licensed under the MIT License.
-
-## 👥 Authors
-
-- Your Name - Initial work
-
-## 🙏 Acknowledgments
-
-- React Native community
-- Expo team
-- FastAPI contributors
+This project is licensed under the **MIT License**.
 
 ---
 
 **Built with ❤️ using React Native + FastAPI**
-
-For questions or support, please open an issue on GitHub.
